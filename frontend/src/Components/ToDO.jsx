@@ -1,8 +1,13 @@
-import React  , {useState}from 'react'
+import React  , {useEffect, useState}from 'react'
 import { BsListTask, BsCheckCircle, BsClockHistory,   } from "react-icons/bs";
  import { useNavigate } from 'react-router-dom';
+  import { totalTaskuser } from '../ApiServices/Api';
 export default function ToDO() {
     const  navigate = useNavigate();
+      const token =  sessionStorage.getItem("token")
+     const [task,settask] = useState([]);
+     
+      
 const initialTasks = [
   { id: 1, title: "Review quarterly performance reports", status: "inProgress", created: "2 hours ago" },
   { id: 2, title: "Update project documentation", status: "completed", created: "yesterday" },
@@ -42,7 +47,19 @@ const statusClasses = {
   const deleteTask = (id) => {
     setTasks(tasks.filter(task => task.id !== id));
   };
-
+ useEffect(()=>{
+    const fatchData = async()=>{
+         try {
+             const res = await totalTaskuser(token);
+              console.log("ttt", res);
+              settask(res);
+            
+         } catch (error) {
+           console.log("erroe", error); 
+         }
+    }
+     fatchData()
+ }, [])
 
   return (
     <div>
@@ -51,7 +68,7 @@ const statusClasses = {
       <div className="flex items-center gap-4 bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition">
         <BsListTask className="text-4xl text-blue-500" />
         <div>
-          <h2 className="text-2xl font-bold text-gray-700">12</h2>
+          <h2 className="text-2xl font-bold text-gray-700">{task.totalTasks}</h2>
           <h3 className="text-gray-500">Total Tasks</h3>
         </div>
       </div>
@@ -60,7 +77,7 @@ const statusClasses = {
       <div className="flex items-center gap-4 bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition">
         <BsCheckCircle className="text-4xl text-green-500" />
         <div>
-          <h2 className="text-2xl font-bold text-gray-700">8</h2>
+          <h2 className="text-2xl font-bold text-gray-700">{task.completedTasks}</h2>
           <h3 className="text-gray-500">Completed</h3>
         </div>
       </div>
@@ -69,7 +86,9 @@ const statusClasses = {
       <div className="flex items-center gap-4 bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition">
         <BsClockHistory className="text-4xl text-yellow-500" />
         <div>
-          <h2 className="text-2xl font-bold text-gray-700">4</h2>
+          <h2 className="text-2xl font-bold text-gray-700">{task.pendingTasks
+
+}</h2>
           <h3 className="text-gray-500">In Process</h3>
         </div>
       </div>
@@ -78,7 +97,8 @@ const statusClasses = {
       <div className="flex items-center gap-4 bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition">
          
         <div>
-          <h2 className="text-2xl font-bold text-gray-700">60%</h2>
+          <h2 className="text-2xl font-bold text-gray-700">{task.productivity
+}</h2>
           <h3 className="text-gray-500">Productivity</h3>
         </div>
       </div>

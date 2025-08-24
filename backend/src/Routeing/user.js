@@ -10,7 +10,9 @@ const express = require('express')
    router.get('/getAllUsers', auth, roleauth(["admin", "manager"]), userdata.getAllUsers)
    router.delete('/deleteUserById/:id' , auth, roleauth(['admin',]), userdata.deleteUserById)
     router.put('/UpdateUser/:id', auth, roleauth(['admin', 'manager']), userdata.UpdateUser);
-     router.get('/getuser',  auth, userdata.getuser)
-   
+     router.get('/TotalTask', auth,  roleauth(['admin', 'manager']),userdata.TotalTask)
+     router.get('/getuser',  auth,  userdata.getuser)
+     router.get('/getAllTasks', auth, roleauth(['admin', 'manager']), userdata.getAllTasks)
+   router.get('/getTaskStats' , auth, userdata.getTaskStats);
 
   module.exports = router;

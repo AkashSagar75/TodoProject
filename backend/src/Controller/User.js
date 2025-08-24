@@ -2,6 +2,8 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../Model/User");
+  const Employee = require('../Model/employee')
+  const Todo = require('../Model/todo')
   
 const SECRET_KEY = process.env.SECRET_KEY;
  exports.Registation = async (req, res) => {
@@ -12,16 +14,15 @@ const SECRET_KEY = process.env.SECRET_KEY;
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // check if user already exists
     const existing = await User.findOne({ email });
     if (existing) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // hash password
+   
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // create user
+   
     const user = new User({
       name,
       email,
@@ -122,10 +123,64 @@ exports.deleteUserById = async (req, res) => {
 
 exports.getuser = async (req, res) => {
   try {
-    const users = await User.find().select("-password"); // password hide
+    const users = await User.find().select("-password"); 
     res.status(200).json({ users });
   } catch (error) {
     console.error("Get All Users Error:", error);
     res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+exports.TotalTask = async (req, res) => {
+  try {
+    const totalEmployees = await User.countDocuments({ role: { $ne: "admin" } });
+    const totalTasks = await Todo.countDocuments();
+    const pendingTasks = await Todo.countDocuments({ status: "pending" });
+    const activeEmployees = await Todo.distinct("assignedTo");
+     res.json({
+      totalEmployees,
+      totalTasks,
+      pendingTasks,
+      activeEmployees: activeEmployees.length,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+exports.getAllTasks = async (req, res) => {
+  try {
+    const tasks = await Todo.find()
+      .populate("assignedTo", "name email role") 
+      .populate("createdBy", "name email role")   
+      .sort({ createdAt: -1 });
+
+    res.json(tasks);
+  } catch (error) {
+    console.error("Get Tasks Error:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+exports.getTaskStats = async (req, res) => {
+  try {
+    const totalTasks = await Todo.countDocuments();
+
+    const completedTasks = await Todo.countDocuments({ status: "completed" });
+    const inProgressTasks = await Todo.countDocuments({ status: "in-process" });
+    const pendingTasks = await Todo.countDocuments({ status: "pending" });
+
+    
+    const productivity =
+      totalTasks > 0 ? ((completedTasks / totalTasks) * 100).toFixed(2) : 0;
+
+    res.json({
+      totalTasks,
+      completedTasks,
+      inProgressTasks,
+      pendingTasks,
+      productivity: `${productivity}%`,
+    });
+  } catch (error) {
+    console.error("Error fetching task stats:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 };

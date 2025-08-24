@@ -23,7 +23,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 6
-    }
+    },
+    profileStatus: {
+      type: String,
+      enum: ["active", "inactive", "blocked"],
+      default: "active",
+    },
   },
   { timestamps: true }
 );

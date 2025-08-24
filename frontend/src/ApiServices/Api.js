@@ -80,3 +80,30 @@ export const GetAllUser = async (token) => {
   });
   return res.data.users;
 };
+
+ export const totalTask = async(token) =>{
+     try {
+        const res =  await axios.get(`${URL}/user/TotalTask`, {
+        headers:{
+            Authorization: `Bearer ${token}`
+        }
+     })
+     return res.data;
+     } catch (error) {
+        console.error("Create Task Error:", error.res?.data || error.message);
+    throw error;
+     }
+ }
+
+   export const totalTaskuser = async(token) =>{
+    try {
+    
+        const res =  await axios.get(`${URL}/user/getTaskStats`, {
+        headers:{
+            Authorization: `Bearer ${token}`}
+        })
+         return res.data
+    } catch (error) {
+        
+    }
+   }

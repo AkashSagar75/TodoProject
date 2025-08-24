@@ -181,12 +181,12 @@ export default function Employee() {
                   <td className="py-2 px-4 border-b">
                     <span
                       className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${
-                        user.profile_status === "approved"
+                        user.profileStatus === "active"
                           ? "text-green-800 bg-green-100"
                           : "text-yellow-800 bg-yellow-100"
                       }`}
                     >
-                      {user.profile_status || "InActive"}
+                      {user.profileStatus || "InActive"}
                     </span>
                   </td>
                   <td className="py-2 px-4 relative inline-block">
@@ -234,26 +234,46 @@ export default function Employee() {
 
       {/* View Modal */}
       {viewId && selectedUser && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
-            <button
-              onClick={handleCloseView}
-              className="absolute top-2 right-2 text-gray-500 hover:text-black"
-            >
-              ×
-            </button>
-            <h2 className="text-xl font-bold mb-4">{selectedUser.name}'s Details</h2>
-            <p>
-              <b>Email:</b> {selectedUser.email}
-            </p>
-            <p>
-              <b>Role:</b> {selectedUser.role}
-            </p>
-            <p>
-              <b>Status:</b> {selectedUser.profile_status || "Inactive"}
-            </p>
-          </div>
-        </div>
+         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
+  <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md relative animate-fadeIn">
+    
+    {/* Close Button */}
+    <button
+      onClick={handleCloseView}
+      className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition"
+    >
+      ×
+    </button>
+
+    {/* Title */}
+    <h2 className="text-2xl font-semibold mb-4 text-gray-800 border-b pb-2">
+      {selectedUser.name}'s Details
+    </h2>
+
+    {/* Details */}
+    <div className="space-y-3 text-gray-600">
+      <p>
+        <span className="font-medium text-gray-800">📧 Email:</span> {selectedUser.email}
+      </p>
+      <p>
+        <span className="font-medium text-gray-800">👤 Role:</span> {selectedUser.role}
+      </p>
+      <p>
+        <span className="font-medium text-gray-800">📌 Status:</span>{" "}
+        <span
+          className={`px-2 py-1 rounded-full text-sm ${
+            selectedUser.profileStatus === "active"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
+          {selectedUser.profileStatus || "Inactive"}
+        </span>
+      </p>
+    </div>
+  </div>
+</div>
+
       )}
 
       {/* Update Modal */}
