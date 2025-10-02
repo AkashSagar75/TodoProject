@@ -13,7 +13,7 @@ dotenv.config();
 
 
   app.use(cors({
-    origin: 'https://todoprojectsagar.netlify.app',
+    origin: 'https://sagartodopro.netlify.app/',
   methods: ['GET','POST','PUT','DELETE','OPTIONS'],
   credentials: true,
  }));
