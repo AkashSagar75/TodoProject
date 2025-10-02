@@ -27,7 +27,7 @@ export default function Employee() {
   const [showPwd, setShowPwd] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Fetch all users
+   
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
@@ -81,19 +81,19 @@ export default function Employee() {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // Open update modal and pre-fill form
+   
   const handleUpdateClick = (user) => {
     setSelectedUser(user);
     setForm({
       name: user.name,
       email: user.email,
-      password: "", // optional
+      password: "",  
       role: user.role,
     });
     setShowUpdated(true);
   };
 
-  // Submit update form
+   
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     const token = sessionStorage.getItem("token");
@@ -101,11 +101,11 @@ export default function Employee() {
 
     try {
       const updatedData = { ...form };
-      if (!updatedData.password) delete updatedData.password; // only update password if entered
+      if (!updatedData.password) delete updatedData.password;  
 
       await UpdateUser(selectedUser._id, updatedData, token);
 
-      // Update local state
+       
       setUsers((prev) =>
         prev.map((u) => (u._id === selectedUser._id ? { ...u, ...updatedData } : u))
       );
@@ -159,7 +159,7 @@ export default function Employee() {
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-600">{error}</p>}
 
-      {/* Users table */}
+     
       {!loading && !error && (
         <div className="overflow-x-auto bg-white shadow-md rounded-lg">
           <table className="min-w-full table-auto border-collapse border border-gray-300">
@@ -231,13 +231,12 @@ export default function Employee() {
           </table>
         </div>
       )}
-
-      {/* View Modal */}
+ 
       {viewId && selectedUser && (
          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
   <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md relative animate-fadeIn">
     
-    {/* Close Button */}
+    
     <button
       onClick={handleCloseView}
       className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition"
@@ -245,12 +244,12 @@ export default function Employee() {
       ×
     </button>
 
-    {/* Title */}
+   
     <h2 className="text-2xl font-semibold mb-4 text-gray-800 border-b pb-2">
       {selectedUser.name}'s Details
     </h2>
 
-    {/* Details */}
+    
     <div className="space-y-3 text-gray-600">
       <p>
         <span className="font-medium text-gray-800">📧 Email:</span> {selectedUser.email}

@@ -7,7 +7,7 @@ const express = require('express');
 
 
 router.post('/createTask', auth, roleauth(["admin", "manager"]), tododata.createTask)
-
+router.get('/getAllemployeetsk' ,auth, roleauth(["employee","admin","manager"]),tododata.getAllemployeetsk)
  
  module.exports = router;
 

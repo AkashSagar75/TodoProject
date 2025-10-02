@@ -13,6 +13,6 @@ const express = require('express')
      router.get('/TotalTask', auth,  roleauth(['admin', 'manager']),userdata.TotalTask)
      router.get('/getuser',  auth,  userdata.getuser)
      router.get('/getAllTasks', auth, roleauth(['admin', 'manager']), userdata.getAllTasks)
-   router.get('/getTaskStats' , auth, userdata.getTaskStats);
+     router.get('/getTaskStats' , auth, userdata.getAllTasks);
 
   module.exports = router;

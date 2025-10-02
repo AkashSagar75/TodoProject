@@ -20,7 +20,7 @@ export default function Login() {
     e.preventDefault();
     try {
       const res = await LoginApi(formData );
-       console.log("user Login data" ,res.data)
+       console.log("user Login data" ,res.data,"role ", res.data.user.role)
 
        const token = res.data.token;
        sessionStorage.setItem("token", token)

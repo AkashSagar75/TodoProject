@@ -28,3 +28,17 @@ exports.createTask = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+
+ exports.getAllemployeetsk = async (req, res) => {
+  try {
+    const tasks = await Todo.find()
+      .populate("assignedTo", "name email role")   
+      .populate("createdBy", "name email role")    
+      .sort({ createdAt: -1 });  
+
+    res.status(200).json({ success: true, tasks });
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};

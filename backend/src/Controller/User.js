@@ -19,11 +19,8 @@ const SECRET_KEY = process.env.SECRET_KEY;
       return res.status(400).json({ message: "User already exists" });
     }
 
-   
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-   
-    const user = new User({
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = new User({
       name,
       email,
       password: hashedPassword,

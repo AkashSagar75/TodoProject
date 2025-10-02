@@ -1,11 +1,13 @@
 import React  , {useEffect, useState}from 'react'
 import { BsListTask, BsCheckCircle, BsClockHistory,   } from "react-icons/bs";
  import { useNavigate } from 'react-router-dom';
-  import { totalTaskuser } from '../ApiServices/Api';
+  import { totalTaskuser ,totalemployeetask} from '../ApiServices/Api';
 export default function ToDO() {
     const  navigate = useNavigate();
       const token =  sessionStorage.getItem("token")
      const [task,settask] = useState([]);
+      const [employeedata, setemployeedata] = useState([]);
+
      
       
 const initialTasks = [
@@ -60,8 +62,22 @@ const statusClasses = {
     }
      fatchData()
  }, [])
+  useEffect(()=>{
+     const fatchdata = async()=>{
+      try {
+         const res = await  totalemployeetask(token);
+         console.log("emplyee data ", res)
+         setemployeedata(res.tasks);
+      } catch (error) {
+         console.log("erroe", error);
+      }
+     }
+      fatchdata()
+  },[])
 
   return (
+    <>
+    
     <div>
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
       {/* Total Tasks */}
@@ -101,6 +117,73 @@ const statusClasses = {
 }</h2>
           <h3 className="text-gray-500">Productivity</h3>
         </div>
+      </div>
+    </div>
+
+     <div className="p-6">
+       
+
+      <div className="overflow-x-auto">
+        <table className="table-auto border-collapse border border-gray-300 w-full shadow-lg rounded-lg">
+          <thead>
+            <tr className="bg-gray-100 text-left">
+              <th className="border border-gray-300 px-4 py-2">Title</th>
+              <th className="border border-gray-300 px-4 py-2">Description</th>
+              <th className="border border-gray-300 px-4 py-2">Assigned To</th>
+              <th className="border border-gray-300 px-4 py-2">Created By</th>
+              <th className="border border-gray-300 px-4 py-2">Priority</th>
+              <th className="border border-gray-300 px-4 py-2">Status</th>
+              <th className="border border-gray-300 px-4 py-2">Due Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {  
+              employeedata.map((task) => (
+                <tr key={task._id} className="hover:bg-gray-50">
+                  <td className="border border-gray-300 px-4 py-2">{task.title}</td>
+                  <td className="border border-gray-300 px-4 py-2">{task.description}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {task.assignedTo?.name} <br />
+                    <span className="text-sm text-gray-500">
+                      {task.assignedTo?.email}
+                    </span>
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {task.createdBy?.name} <br />
+                    <span className="text-sm text-gray-500">
+                      {task.createdBy?.email}
+                    </span>
+                  </td>
+                  <td
+                    className={`border border-gray-300 px-4 py-2 capitalize ${
+                      task.priority === "high"
+                        ? "text-red-600 font-semibold"
+                        : task.priority === "medium"
+                        ? "text-yellow-600 font-semibold"
+                        : "text-green-600 font-semibold"
+                    }`}
+                  >
+                    {task.priority}
+                  </td>
+                  <td
+                    className={`border border-gray-300 px-4 py-2 capitalize ${
+                      task.status === "completed"
+                        ? "text-green-600"
+                        : task.status === "in-process"
+                        ? "text-blue-600"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    {task.status}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {new Date(task.dueDate).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
       </div>
     </div>
       
@@ -161,5 +244,8 @@ const statusClasses = {
       </div>
     </div>
     </div>
+      
+    
+    </>
   )
 }

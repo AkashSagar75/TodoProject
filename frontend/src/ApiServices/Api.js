@@ -107,3 +107,17 @@ export const GetAllUser = async (token) => {
         
     }
    }
+   
+
+    export const totalemployeetask = async(token) =>{
+    try {
+    
+        const res =  await axios.get(`${URL}/todo/getAllemployeetsk`, {
+        headers:{
+            Authorization: `Bearer ${token}`}
+        })
+         return res.data
+    } catch (error) {
+        
+    }
+   }
